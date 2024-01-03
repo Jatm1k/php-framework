@@ -1,0 +1,9 @@
+name: php-framework
+recipe: lemp
+config:
+  webroot: public
+  php: "8.2"
+  database: mysql
+services:
+  phpmyadmin:
+    type: phpmyadmin
