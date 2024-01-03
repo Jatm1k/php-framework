@@ -2,7 +2,7 @@
     "name": "jatmy/php-framework",
     "autoload": {
         "psr-4": {
-            "Jatmy\\PhpFramework\\": "framework",
+            "Jatmy\\Framework\\": "framework",
             "App\\": "app"
         }
     },
