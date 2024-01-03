@@ -2,6 +2,8 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use Jatmy\Framework\Http\Request;
+use Jatmy\Framework\Http\Response;
 
 $request = Request::createFromGlobals();
-dd($request);
+$response = new Response('test');
+$response->send();
