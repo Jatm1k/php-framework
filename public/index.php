@@ -1,2 +1,4 @@
 <?php
-echo '123';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+dd(123);

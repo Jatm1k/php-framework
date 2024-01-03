@@ -1,0 +1,19 @@
+{
+    "name": "jatmy/php-framework",
+    "autoload": {
+        "psr-4": {
+            "Jatmy\\PhpFramework\\": "framework",
+            "App\\": "app"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jatmy",
+            "email": "jatmyy@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "symfony/var-dumper": "^5.4",
+        "laravel/pint": "^1.13"
+    }
+}
