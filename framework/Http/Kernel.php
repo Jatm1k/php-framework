@@ -15,24 +15,18 @@ class Kernel
             foreach ($routes as $route) {
                 $collector->addRoute(...$route);
             }
-            $collector->get('/', function () {
-                $content = 'test';
-                return new Response($content);
-            });
-
-            $collector->get('/posts/{id}', function (array $vars) {
-                $content = "Post id {$vars['id']}";
-                return new Response($content);
-            });
         });
 
         $routeInfo = $dispatcher->dispatch(
             $request->getMethod(),
             $request->getPath()
         );
-        
-        [$status, $handler, $vars] = $routeInfo;
 
-        return $handler($vars);
+        
+        [$status, [$controller, $method], $vars] = $routeInfo;
+
+        $response = (new $controller())->$method($vars);
+
+        return $response;
     }
 }
