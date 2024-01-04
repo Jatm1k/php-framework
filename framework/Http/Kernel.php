@@ -11,6 +11,10 @@ class Kernel
     public function handle(Request $request): Response
     {
         $dispatcher = simpleDispatcher(function (RouteCollector $collector) {
+            $routes = include BASE_PATH . '/routes/web.php';
+            foreach ($routes as $route) {
+                $collector->addRoute(...$route);
+            }
             $collector->get('/', function () {
                 $content = 'test';
                 return new Response($content);
@@ -21,7 +25,7 @@ class Kernel
                 return new Response($content);
             });
         });
-        
+
         $routeInfo = $dispatcher->dispatch(
             $request->getMethod(),
             $request->getPath()
