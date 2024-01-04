@@ -1,7 +1,9 @@
 name: php-framework
 recipe: lemp
 config:
-  webroot: public
+  via: nginx
+  config:
+    vhosts: .lando/nginx.conf
   php: "8.2"
   database: mysql
 services:
