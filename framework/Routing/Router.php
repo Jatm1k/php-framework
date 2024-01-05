@@ -38,16 +38,19 @@ class Router implements RouterInterface
             $request->getMethod(),
             $request->getPath()
         );
-        // dd($routeInfo);
         switch($routeInfo[0]) {
             case Dispatcher::FOUND:
                 return [$routeInfo[1], $routeInfo[2]];
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = implode(', ', $routeInfo[1]);
                 $message = "Method not allowed. Allowed methods: {$allowedMethods}";
-                throw new MethodNotAllowedException($message);
+                $exception = new MethodNotAllowedException($message);
+                $exception->setStatusCode(405);
+                throw $exception;
             default:
-                throw new RouteNotFoundException('Route not found');
+                $exception = new RouteNotFoundException('Route not found');
+                $exception->setStatusCode(404);
+                throw $exception;
         }
     }
 }
