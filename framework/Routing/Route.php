@@ -8,4 +8,9 @@ class Route
     {
         return ['GET', $uri, $handler];
     }
+
+    public static function post(string $uri, array $handler): array
+    {
+        return ['POST', $uri, $handler];
+    }
 }

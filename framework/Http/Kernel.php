@@ -3,29 +3,24 @@
 namespace Jatmy\Framework\Http;
 
 use FastRoute\RouteCollector;
+use Jatmy\Framework\Routing\RouterInterface;
 
 use function FastRoute\simpleDispatcher;
 
 class Kernel
 {
+    public function __construct(
+        private RouterInterface $router,
+    ) {
+    }
     public function handle(Request $request): Response
     {
-        $dispatcher = simpleDispatcher(function (RouteCollector $collector) {
-            $routes = include BASE_PATH . '/routes/web.php';
-            foreach ($routes as $route) {
-                $collector->addRoute(...$route);
-            }
-        });
-
-        $routeInfo = $dispatcher->dispatch(
-            $request->getMethod(),
-            $request->getPath()
-        );
-
-        [$status, [$controller, $method], $vars] = $routeInfo;
-        
-        $response = (new $controller())->$method(...$vars);
-
+        try {
+            [$routeHandler, $vars] = $this->router->dispatch($request);
+            $response = call_user_func_array($routeHandler, $vars);
+        } catch (\Throwable $e) {
+            $response = new Response($e->getMessage(), 500);
+        }
         return $response;
     }
 }
