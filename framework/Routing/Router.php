@@ -14,9 +14,15 @@ class Router implements RouterInterface
 {
     public function dispatch(Request $request): array
     {
-        [[$controller, $method], $vars] = $this->extractRouteInfo($request);
-
-        return [[new $controller, $method], $vars];
+        [$handler, $vars] = $this->extractRouteInfo($request);
+        if(is_array($handler)) {
+            [$controller, $method] = $handler;
+            $handler = [new $controller, $method];
+        } elseif(is_string($handler)) {
+            $controller = $handler;
+            $handler = [new $controller, '__invoke'];
+        }
+        return [$handler, $vars];
     }
 
     private function extractRouteInfo(Request $request)
@@ -32,7 +38,7 @@ class Router implements RouterInterface
             $request->getMethod(),
             $request->getPath()
         );
-
+        // dd($routeInfo);
         switch($routeInfo[0]) {
             case Dispatcher::FOUND:
                 return [$routeInfo[1], $routeInfo[2]];
