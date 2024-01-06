@@ -2,13 +2,8 @@
 
 namespace Jatmy\Framework\Http;
 
-use FastRoute\RouteCollector;
 use Jatmy\Framework\Http\Exceptions\HttpException;
-use Jatmy\Framework\Http\Exceptions\MethodNotAllowedException;
-use Jatmy\Framework\Http\Exceptions\RouteNotFoundException;
 use Jatmy\Framework\Routing\RouterInterface;
-
-use function FastRoute\simpleDispatcher;
 
 class Kernel
 {

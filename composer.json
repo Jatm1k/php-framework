@@ -1,22 +1,21 @@
 {
-    "name": "jatmy/php-framework",
     "autoload": {
         "psr-4": {
-            "Jatmy\\Framework\\": "framework",
             "App\\": "app"
         }
     },
-    "authors": [
-        {
-            "name": "Jatmy",
-            "email": "jatmyy@gmail.com"
-        }
-    ],
     "require-dev": {
         "symfony/var-dumper": "^5.4",
         "laravel/pint": "^1.13"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "framework"
+        }
+    ],
     "require": {
-        "nikic/fast-route": "^1.3"
+        "php": "^8.2",
+        "jatmy/php-framework": "dev-main"
     }
 }

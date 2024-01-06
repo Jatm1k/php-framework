@@ -4,8 +4,35 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "087ea035792313ac8479e6f6a0e52791",
+    "content-hash": "38b29140c60b5594955dd25d900d02cb",
     "packages": [
+        {
+            "name": "jatmy/php-framework",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "framework",
+                "reference": "e94f629d01022135a9375bc5b3a8139a3538d7ca"
+            },
+            "require": {
+                "nikic/fast-route": "^1.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Jatmy\\Framework\\": "src"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Jatmy",
+                    "email": "jatmyy@gmail.com"
+                }
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
         {
             "name": "nikic/fast-route",
             "version": "v1.3.0",
@@ -382,10 +409,14 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jatmy/php-framework": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^8.2"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
 }
