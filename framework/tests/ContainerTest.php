@@ -23,4 +23,12 @@ class ContainerTest extends TestCase
         $this->expectException(ContainerException::class);
         $container->add($id);
     }
+    public function test_has_method()
+    {
+        $container = new Container();
+        $id = 'jatmy';
+        $container->add($id, Jatmy::class);
+        $this->assertTrue($container->has($id));
+        $this->assertFalse($container->has('no-class'));
+    }
 }
