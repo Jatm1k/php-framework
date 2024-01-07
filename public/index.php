@@ -5,10 +5,12 @@ require_once BASE_PATH . '/vendor/autoload.php';
 
 use Jatmy\Framework\Http\Kernel;
 use Jatmy\Framework\Http\Request;
-use Jatmy\Framework\Routing\Router;
 
 $request = Request::createFromGlobals();
-$router = new Router();
-$kernel = new Kernel($router);
+
+/** @var Container $container */
+$container = require BASE_PATH . '/config/services.php';
+
+$kernel = $container->get(Kernel::class);
 $response = $kernel->handle($request);
 $response->send();
