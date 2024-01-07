@@ -31,4 +31,13 @@ class ContainerTest extends TestCase
         $this->assertTrue($container->has($id));
         $this->assertFalse($container->has('no-class'));
     }
+    public function test_recursively_autowired()
+    {
+        $container = new Container();
+        $id = Jatmy::class;
+        $container->add($id);
+        /* @var Jatmy $jatmy */
+        $jatmy = $container->get($id);
+        $this->assertInstanceOf(Food::class, $jatmy->getFood());
+    }
 }
