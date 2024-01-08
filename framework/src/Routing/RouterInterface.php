@@ -6,5 +6,7 @@ use Jatmy\Framework\Http\Request;
 
 interface RouterInterface
 {
-    public function dispatch(Request $request);
+    public function dispatch(Request $request): array;
+
+    public function registerRoutes(array $routes): void;
 }
