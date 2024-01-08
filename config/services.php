@@ -7,6 +7,10 @@ use Jatmy\Framework\Routing\RouterInterface;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\ReflectionContainer;
+use Symfony\Component\Dotenv\Dotenv;
+
+$dotenv = new Dotenv();
+$dotenv->load(BASE_PATH . '/.env');
 
 // Application parametrs
 $routes = include BASE_PATH . '/routes/web.php';
@@ -14,8 +18,8 @@ $routes = include BASE_PATH . '/routes/web.php';
 // Application services
 $container = new Container();
 $container->delegate(new ReflectionContainer(true));
-
-$container->add('APP_ENV', new StringArgument('local'));
+$appEnv = $_ENV['APP_ENV'] ?? 'local';
+$container->add('APP_ENV', new StringArgument($appEnv));
 
 $container->add(RouterInterface::class, Router::class);
 $container->extend(RouterInterface::class)->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
