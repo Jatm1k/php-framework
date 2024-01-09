@@ -14,8 +14,6 @@ class HomeController extends AbstractController
     }
     public function index(): Response
     {
-        $content = $this->hello->sayHello();
-        $content .= ' {{name}}';
-        return $this->render($content, ['name' => 'Jatmy']);
+        return $this->render('home', ['name' => 'Jatmy']);
     }
 }

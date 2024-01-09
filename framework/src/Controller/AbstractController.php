@@ -15,6 +15,7 @@ abstract class AbstractController
 
     public function render(string $view, array $data = [], Response $response = null): Response
     {
+        $view .= '.html.twig';
         /** @var \Twig\Environment $twig */
         $twig = $this->container->get('twig');
         $content = $twig->render($view, $data);

@@ -9,6 +9,7 @@ use Jatmy\Framework\Routing\Route;
 return [
     Route::get('/', [HomeController::class, 'index']),
     Route::get('/invoke', InvokeController::class),
+    Route::get('/posts/create', [PostController::class, 'create']),
     Route::get('/posts/{id}', [PostController::class, 'show']),
     Route::get('/hi/{name}', function (string $name) {
         return new Response('Hi ' . $name);
