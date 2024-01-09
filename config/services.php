@@ -1,5 +1,6 @@
 <?php
 
+use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Http\Kernel;
 use League\Container\Container;
 use Jatmy\Framework\Routing\Router;
@@ -34,7 +35,10 @@ $container->add(Kernel::class)
 $container->addShared('twig-loader', FilesystemLoader::class)
     ->addArgument(new StringArgument($viewsPath));
 
-$container->addShared(Environment::class)
+$container->addShared('twig', Environment::class)
     ->addArgument('twig-loader');
+
+$container->inflector(AbstractController::class)
+    ->invokeMethod('setContainer', [$container]);
 
 return $container;

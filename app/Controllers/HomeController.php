@@ -3,14 +3,13 @@
 namespace App\Controllers;
 
 use App\Services\Hello;
+use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Http\Response;
-use Twig\Environment;
 
-class HomeController
+class HomeController extends AbstractController
 {
     public function __construct(
         private Hello $hello,
-        private readonly Environment $twig,
     ) {
     }
     public function index(): Response
