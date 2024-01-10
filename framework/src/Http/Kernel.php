@@ -3,9 +3,10 @@
 namespace Jatmy\Framework\Http;
 
 use Exception;
-use Jatmy\Framework\Http\Exceptions\HttpException;
-use Jatmy\Framework\Routing\RouterInterface;
+use Doctrine\DBAL\Connection;
 use League\Container\Container;
+use Jatmy\Framework\Routing\RouterInterface;
+use Jatmy\Framework\Http\Exceptions\HttpException;
 
 class Kernel
 {
@@ -20,6 +21,7 @@ class Kernel
     public function handle(Request $request): Response
     {
         try {
+            dd($this->container->get(Connection::class)->connect());
             [$routeHandler, $vars] = $this->router->dispatch($request, $this->container);
             $response = call_user_func_array($routeHandler, $vars);
         } catch (\Exception $e) {

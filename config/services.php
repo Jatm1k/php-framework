@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\Connection;
+use Framework\Dbal\ConnectionFactory;
 use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Http\Kernel;
 use League\Container\Container;
@@ -19,6 +21,7 @@ $dotenv->load(BASE_PATH . '/.env');
 $routes = include BASE_PATH . '/routes/web.php';
 $appEnv = $_ENV['APP_ENV'] ?? 'local';
 $viewsPath = BASE_PATH . '/views';
+$databaseUrl = 'pdo-mysql://lemp:lemp@database:3306/lemp?charset=utf8mb4';
 
 // Application services
 $container = new Container();
@@ -40,5 +43,12 @@ $container->addShared('twig', Environment::class)
 
 $container->inflector(AbstractController::class)
     ->invokeMethod('setContainer', [$container]);
+
+$container->add(ConnectionFactory::class)
+    ->addArgument(new StringArgument($databaseUrl));
+
+$container->addShared(Connection::class, function () use ($container): Connection {
+    return $container->get(ConnectionFactory::class)->create();
+});
 
 return $container;
