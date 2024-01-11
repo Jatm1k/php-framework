@@ -1,35 +1,41 @@
 <?php
 
 use Doctrine\DBAL\Connection;
-use Framework\Dbal\ConnectionFactory;
-use Jatmy\Framework\Controller\AbstractController;
-use Jatmy\Framework\Http\Kernel;
-use League\Container\Container;
-use Jatmy\Framework\Routing\Router;
-use Jatmy\Framework\Routing\RouterInterface;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
+use League\Container\Container;
 use League\Container\ReflectionContainer;
+use Jatmy\Framework\Controller\AbstractController;
+use Jatmy\Framework\Dbal\ConnectionFactory;
+use Jatmy\Framework\Http\Kernel;
+use Jatmy\Framework\Routing\Router;
+use Jatmy\Framework\Routing\RouterInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 $dotenv = new Dotenv();
-$dotenv->load(BASE_PATH . '/.env');
+$dotenv->load(BASE_PATH.'/.env');
 
-// Application parametrs
-$routes = include BASE_PATH . '/routes/web.php';
+// Application parameters
+
+$routes = include BASE_PATH.'/routes/web.php';
 $appEnv = $_ENV['APP_ENV'] ?? 'local';
-$viewsPath = BASE_PATH . '/views';
+$viewsPath = BASE_PATH.'/views';
 $databaseUrl = 'pdo-mysql://lemp:lemp@database:3306/lemp?charset=utf8mb4';
 
 // Application services
+
 $container = new Container();
+
 $container->delegate(new ReflectionContainer(true));
+
 $container->add('APP_ENV', new StringArgument($appEnv));
 
 $container->add(RouterInterface::class, Router::class);
-$container->extend(RouterInterface::class)->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
+
+$container->extend(RouterInterface::class)
+    ->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
 
 $container->add(Kernel::class)
     ->addArgument(RouterInterface::class)

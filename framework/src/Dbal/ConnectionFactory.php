@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Dbal;
+namespace Jatmy\Framework\Dbal;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
