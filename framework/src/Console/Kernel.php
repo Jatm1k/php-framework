@@ -9,13 +9,15 @@ use ReflectionClass;
 class Kernel
 {
 
-    public function __construct(private ContainerInterface $container)
-    {
+    public function __construct(
+        private ContainerInterface $container,
+        private Application $application,
+    ) {
     }
-    public function handle()
+    public function handle(): int
     {
         $this->registerCommands();
-        return "Hello World";
+        return $this->application->run();
     }
 
     private function registerCommands(): void
@@ -30,7 +32,7 @@ class Kernel
 
             if(is_subclass_of($command, CommandInterface::class)) {
                 $name = (new ReflectionClass($command))->getProperty('name')->getDefaultValue();
-                $this->container->add($name, $command);
+                $this->container->add("console:$name", $command);
             }
         }
     }

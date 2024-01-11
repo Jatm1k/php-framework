@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\DBAL\Connection;
+use Jatmy\Framework\Console\Application;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
@@ -60,6 +61,11 @@ $container->addShared(Connection::class, function () use ($container): Connectio
     return $container->get(ConnectionFactory::class)->create();
 });
 
-$container->add(ConsoleKernel::class)->addArgument($container);
+$container->add(Application::class)
+    ->addArgument($container);
+
+$container->add(ConsoleKernel::class)
+    ->addArgument($container)
+    ->addArgument(Application::class);
 
 return $container;
