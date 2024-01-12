@@ -2,6 +2,7 @@
 
 use Doctrine\DBAL\Connection;
 use Jatmy\Framework\Console\Application;
+use Jatmy\Framework\Console\Commands\MigrateCommand;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
@@ -67,5 +68,8 @@ $container->add(Application::class)
 $container->add(ConsoleKernel::class)
     ->addArgument($container)
     ->addArgument(Application::class);
+
+$container->add('console:migrate', MigrateCommand::class)
+    ->addArgument(Connection::class);
 
 return $container;
