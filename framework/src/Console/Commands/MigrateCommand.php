@@ -13,14 +13,41 @@ class MigrateCommand implements CommandInterface
     private const MIGRATIONS_TABLE = 'migrations';
     
     public function __construct(
-        private Connection $connection
+        private Connection $connection,
+        private string $migrationsPath,
     ) {
     }
 
     public function execute(array $parametrs = []): int
     {
-        $this->createMigrationTable();
-        echo 'migrate';
+        try {
+            $this->createMigrationTable();
+
+            $this->connection->beginTransaction();
+
+            $appliedMigrations = $this->getAppliedMigrations();
+
+            $migrationFiles = $this->getMigraionFiles();
+
+            $migrationsToApply = array_values(array_diff($migrationFiles, $appliedMigrations));
+
+            $schema = new Schema();
+            foreach($migrationsToApply as $migration) {
+                $migrationInstance = require $this->migrationsPath . "/$migration";
+                $migrationInstance->up($schema);
+
+                $this->addMigration($migration);
+            }
+
+            $sqlArray = $schema->toSql($this->connection->getDatabasePlatform());
+            foreach($sqlArray as $sql) {
+                $this->connection->executeQuery($sql);
+            }
+            $this->connection->commit();
+        } catch (\Throwable $e) {
+            $this->connection->rollBack();
+            throw $e;
+        }
         return 0;
     }
 
@@ -47,5 +74,31 @@ class MigrateCommand implements CommandInterface
             echo 'Migrations table created' . PHP_EOL;
         }
 
+    }
+
+    private function getAppliedMigrations(): array
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        return $queryBuilder->select('migration')
+            ->from(self::MIGRATIONS_TABLE)
+            ->executeQuery()
+            ->fetchFirstColumn();
+    }
+
+    private function getMigraionFiles(): array
+    {
+        $migrationFiles = scandir($this->migrationsPath);
+        $arrayFiltered = array_filter($migrationFiles, fn ($file) => !in_array($file, ['.', '..']));
+        return array_values($arrayFiltered);
+    }
+
+    private function addMigration(string $migration): void
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $queryBuilder->insert(self::MIGRATIONS_TABLE)
+            ->values(['migration' => ':migration'])
+            ->setParameter('migration', $migration)
+            ->executeQuery();
     }
 }
