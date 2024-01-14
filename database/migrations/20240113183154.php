@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 return new class {
     public function up(Schema $schema): void
     {
-        $table = $schema->createTable('posts');
+        $table = $schema->createTable('postsss');
         $table->addColumn('id', Types::INTEGER, [
             'autoincrement' => true,
             'unsigned' => true,
@@ -20,6 +20,6 @@ return new class {
     }
     public function down(Schema $schema): void
     {
-        $schema->dropTable('posts');
+        $schema->dropTable('postsss');
     }
 };

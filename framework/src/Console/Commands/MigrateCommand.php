@@ -11,6 +11,7 @@ class MigrateCommand implements CommandInterface
 {
     private string $name = 'migrate';
     private const MIGRATIONS_TABLE = 'migrations';
+    private int $batch = 1;
     
     public function __construct(
         private Connection $connection,
@@ -30,6 +31,8 @@ class MigrateCommand implements CommandInterface
             $migrationFiles = $this->getMigraionFiles();
 
             $migrationsToApply = array_values(array_diff($migrationFiles, $appliedMigrations));
+
+            $this->updateBatch();
 
             $schema = new Schema();
             foreach($migrationsToApply as $migration) {
@@ -54,7 +57,6 @@ class MigrateCommand implements CommandInterface
     private function createMigrationTable(): void
     {
         $schemaManager = $this->connection->createSchemaManager();
-
         if(!$schemaManager->tablesExist([self::MIGRATIONS_TABLE])) {
             $schema = new Schema();
             $table = $schema->createTable(self::MIGRATIONS_TABLE);
@@ -63,6 +65,10 @@ class MigrateCommand implements CommandInterface
                 'autoincrement' => true,
             ]);
             $table->addColumn('migration', Types::STRING);
+            $table->addColumn('batch', Types::INTEGER, [
+                'unsigned' => true,
+                'default' => 1,
+            ]);
             $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, [
                 'default' => 'CURRENT_TIMESTAMP',
             ]);
@@ -97,8 +103,22 @@ class MigrateCommand implements CommandInterface
         $queryBuilder = $this->connection->createQueryBuilder();
 
         $queryBuilder->insert(self::MIGRATIONS_TABLE)
-            ->values(['migration' => ':migration'])
+            ->values([
+                'migration' => ':migration',
+                'batch' => ':batch',
+                ])
             ->setParameter('migration', $migration)
+            ->setParameter('batch', $this->batch)
             ->executeQuery();
+    }
+
+    private function updateBatch(): void
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $currentBatch = $queryBuilder->select('max(batch)')
+            ->from(self::MIGRATIONS_TABLE)
+            ->executeQuery()
+            ->fetchOne();
+        $this->batch = $currentBatch + 1;
     }
 }

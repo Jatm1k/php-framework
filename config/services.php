@@ -3,6 +3,7 @@
 use Doctrine\DBAL\Connection;
 use Jatmy\Framework\Console\Application;
 use Jatmy\Framework\Console\Commands\MigrateCommand;
+use Jatmy\Framework\Console\Commands\MigrateRollbackCommand;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
@@ -70,6 +71,9 @@ $container->add(ConsoleKernel::class)
     ->addArgument(Application::class);
 
 $container->add('console:migrate', MigrateCommand::class)
+    ->addArgument(Connection::class)
+    ->addArgument(new StringArgument(BASE_PATH . '/database/migrations'));
+$container->add('console:migrate:rollback', MigrateRollbackCommand::class)
     ->addArgument(Connection::class)
     ->addArgument(new StringArgument(BASE_PATH . '/database/migrations'));
 
