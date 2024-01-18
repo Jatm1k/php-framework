@@ -1,16 +1,16 @@
-{% extends 'default.html.twig' %}
+{% extends 'layouts/default.html.twig' %}
 
 {% block main %}
     <div class="bg-body-tertiary p-5 rounded">
-        <form>
+        <form action="/posts" method="post">
             <div class="mb-3">
                 <label for="title" class="form-label">Заголовок</label>
-                <input type="text" class="form-control" id="title" aria-describedby="titleHelp">
-                <div id="titleHelp" class="form-text">Дайте своему посту броский заголовок.</div>
+                <input type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" required>
             </div>
             <div class="mb-3">
                 <label for="body" class="form-label">Контент</label>
-                <textarea name="body" id="" cols="30" rows="10" class="form-control"></textarea>
+                <textarea name="body" id="" cols="30" rows="10" class="form-control" required>
+                </textarea>
             </div>
             <button type="submit" class="btn btn-primary">Добавить</button>
         </form>

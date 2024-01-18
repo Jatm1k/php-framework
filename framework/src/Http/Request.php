@@ -28,4 +28,14 @@ class Request
     {
         return $this->server['REQUEST_METHOD'];
     }
+
+    public function all(): array
+    {
+        return array_merge($this->getParams, $this->postData, $this->cookies, $this->files);
+    }
+
+    public function input(string $key, mixed $default = null): mixed
+    {
+        return $this->all()[$key] ?? $default;
+    }
 }
