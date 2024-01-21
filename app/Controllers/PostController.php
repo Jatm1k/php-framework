@@ -6,6 +6,7 @@ use App\Entities\Post;
 use App\Services\PostService;
 use Jatmy\Framework\Http\Response;
 use Jatmy\Framework\Controller\AbstractController;
+use Jatmy\Framework\Http\RedirectResponse;
 use Jatmy\Framework\Http\Request;
 
 class PostController extends AbstractController
@@ -33,7 +34,8 @@ class PostController extends AbstractController
             $this->request->input('title'),
             $this->request->input('body')
         );
-        $postId = $this->service->save($post);
-        dd($postId);
+        /** @var Post $post */
+        $post = $this->service->save($post);
+        return new RedirectResponse("/posts/{$post->getId()}");
     }
 }

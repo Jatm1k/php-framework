@@ -22,4 +22,14 @@ class Response
         $this->content = $content;
         return $this;
     }
+
+    public function getHeader(): ?string
+    {
+        return $this->headers['location'] ?? null;
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
 }
