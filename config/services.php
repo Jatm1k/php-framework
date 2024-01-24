@@ -18,8 +18,6 @@ use Jatmy\Framework\Session\Session;
 use Jatmy\Framework\Session\SessionInterface;
 use Jatmy\Framework\Template\TwigFactory;
 use Symfony\Component\Dotenv\Dotenv;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 $dotenv = new Dotenv();
 $dotenv->load(BASE_PATH.'/.env');
@@ -50,7 +48,7 @@ $container->add(Kernel::class)
     ->addArgument(RouterInterface::class)
     ->addArgument($container);
 
-$container->addShared(SessionIdInterface::class, Session::class);
+$container->addShared(SessionInterface::class, Session::class);
 
 $container->add('twig-factory', TwigFactory::class)
     ->addArguments([
