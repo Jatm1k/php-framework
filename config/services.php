@@ -14,6 +14,9 @@ use Jatmy\Framework\Http\Kernel;
 use Jatmy\Framework\Console\Kernel as ConsoleKernel;
 use Jatmy\Framework\Routing\Router;
 use Jatmy\Framework\Routing\RouterInterface;
+use Jatmy\Framework\Session\Session;
+use Jatmy\Framework\Session\SessionInterface;
+use Jatmy\Framework\Template\TwigFactory;
 use Symfony\Component\Dotenv\Dotenv;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -47,12 +50,17 @@ $container->add(Kernel::class)
     ->addArgument(RouterInterface::class)
     ->addArgument($container);
 
-$container->addShared('twig-loader', FilesystemLoader::class)
-    ->addArgument(new StringArgument($viewsPath));
+$container->addShared(SessionIdInterface::class, Session::class);
 
-$container->addShared('twig', Environment::class)
-    ->addArgument('twig-loader');
+$container->add('twig-factory', TwigFactory::class)
+    ->addArguments([
+        new StringArgument($viewsPath),
+        SessionInterface::class
+    ]);
 
+$container->addShared('twig', function () use ($container) {
+    return $container->get('twig-factory')->create();
+});
 $container->inflector(AbstractController::class)
     ->invokeMethod('setContainer', [$container]);
 
