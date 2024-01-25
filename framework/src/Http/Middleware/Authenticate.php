@@ -7,7 +7,7 @@ use Jatmy\Framework\Http\Response;
 
 class Authenticate implements MiddlewareInterface
 {
-    private bool $isAuthenticated = false;
+    private bool $isAuthenticated = true;
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         if(!$this->isAuthenticated) {

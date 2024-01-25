@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use League\Container\Container;
 use Jatmy\Framework\Routing\RouterInterface;
 use Jatmy\Framework\Http\Exceptions\HttpException;
+use Jatmy\Framework\Http\Middleware\RequestHandlerInterface;
 
 class Kernel
 {
@@ -15,14 +16,17 @@ class Kernel
     public function __construct(
         private RouterInterface $router,
         private Container $container,
+        private RequestHandlerInterface $requestHandler,
     ) {
         $this->appEnv = $container->get('APP_ENV');
     }
     public function handle(Request $request): Response
     {
         try {
-            [$routeHandler, $vars] = $this->router->dispatch($request, $this->container);
-            $response = call_user_func_array($routeHandler, $vars);
+            $response = $this->requestHandler->handle($request);
+            // [$routeHandler, $vars] = $this->router->dispatch($request, $this->container);
+            // $response = call_user_func_array($routeHandler, $vars);
+
         } catch (\Exception $e) {
             $response = $this->createExceptionResponse($e);
         }

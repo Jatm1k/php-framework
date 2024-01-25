@@ -4,6 +4,7 @@ use Doctrine\DBAL\Connection;
 use Jatmy\Framework\Console\Application;
 use Jatmy\Framework\Console\Commands\MigrateCommand;
 use Jatmy\Framework\Console\Commands\MigrateRollbackCommand;
+use Jatmy\Framework\Http\Middleware\RequestHandlerInterface;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
@@ -12,6 +13,7 @@ use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Dbal\ConnectionFactory;
 use Jatmy\Framework\Http\Kernel;
 use Jatmy\Framework\Console\Kernel as ConsoleKernel;
+use Jatmy\Framework\Http\Middleware\RequestHandler;
 use Jatmy\Framework\Routing\Router;
 use Jatmy\Framework\Routing\RouterInterface;
 use Jatmy\Framework\Session\Session;
@@ -44,9 +46,14 @@ $container->add(RouterInterface::class, Router::class);
 $container->extend(RouterInterface::class)
     ->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
 
+$container->add(RequestHandlerInterface::class, RequestHandler::class);
+
 $container->add(Kernel::class)
-    ->addArgument(RouterInterface::class)
-    ->addArgument($container);
+    ->addArguments([
+        RouterInterface::class,
+        $container,
+        RequestHandlerInterface::class,
+    ]);
 
 $container->addShared(SessionInterface::class, Session::class);
 
