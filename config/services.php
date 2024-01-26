@@ -14,6 +14,7 @@ use Jatmy\Framework\Dbal\ConnectionFactory;
 use Jatmy\Framework\Http\Kernel;
 use Jatmy\Framework\Console\Kernel as ConsoleKernel;
 use Jatmy\Framework\Http\Middleware\RequestHandler;
+use Jatmy\Framework\Http\Middleware\RouterDispatch;
 use Jatmy\Framework\Routing\Router;
 use Jatmy\Framework\Routing\RouterInterface;
 use Jatmy\Framework\Session\Session;
@@ -91,4 +92,9 @@ $container->add('console:migrate:rollback', MigrateRollbackCommand::class)
     ->addArgument(Connection::class)
     ->addArgument(new StringArgument(BASE_PATH . '/database/migrations'));
 
+$container->add(RouterDispatch::class)
+    ->addArguments([
+        RouterInterface::class,
+        $container,
+    ]);
 return $container;
