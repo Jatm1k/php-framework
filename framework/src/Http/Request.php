@@ -2,9 +2,11 @@
 
 namespace Jatmy\Framework\Http;
 
+use Jatmy\Framework\Session\SessionInterface;
+
 class Request
 {
-
+    private SessionInterface $session;
     public function __construct(
         private readonly array $getParams,
         private readonly array $postData,
@@ -37,5 +39,15 @@ class Request
     public function input(string $key, mixed $default = null): mixed
     {
         return $this->all()[$key] ?? $default;
+    }
+
+    public function setSession(SessionInterface $session): void
+    {
+        $this->session = $session;
+    }
+
+    public function getSession(): SessionInterface
+    {
+        return $this->session;
     }
 }

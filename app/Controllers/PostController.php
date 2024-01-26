@@ -7,14 +7,11 @@ use App\Services\PostService;
 use Jatmy\Framework\Http\Response;
 use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Http\RedirectResponse;
-use Jatmy\Framework\Http\Request;
-use Jatmy\Framework\Session\SessionInterface;
 
 class PostController extends AbstractController
 {
     public function __construct(
         private PostService $service,
-        private SessionInterface $session,
     ) {
         
     }
@@ -39,7 +36,7 @@ class PostController extends AbstractController
         /** @var Post $post */
         $post = $this->service->save($post);
         
-        $this->session->setFlash('success', 'Post created successfully');
+        $this->request->getSession()->setFlash('success', 'Post created successfully');
         return new RedirectResponse("/posts/{$post->getId()}");
     }
 }
