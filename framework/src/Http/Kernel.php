@@ -40,4 +40,9 @@ class Kernel
         }
         return new Response('Server error', 500);
     }
+
+    public function terminate(Request $request, Response $response): void
+    {
+        $request->getSession()?->clearFlash();
+    }
 }
