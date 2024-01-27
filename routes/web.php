@@ -4,6 +4,7 @@ use Jatmy\Framework\Routing\Route;
 use App\Controllers\HomeController;
 use App\Controllers\PostController;
 use App\Controllers\InvokeController;
+use App\Controllers\RegisterController;
 
 return [
     Route::get('/', [HomeController::class, 'index']),
@@ -11,4 +12,6 @@ return [
     Route::get('/posts/create', [PostController::class, 'create']),
     Route::get('/posts/{id}', [PostController::class, 'show']),
     Route::post('/posts', [PostController::class, 'store']),
+    Route::get('/register', [RegisterController::class, 'index']),
+    Route::post('/register', [RegisterController::class, 'store']),
 ];
