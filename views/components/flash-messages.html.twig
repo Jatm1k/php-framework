@@ -1,0 +1,13 @@
+{% if session().hasFlash('success') %}
+    {% for message in session().getFlash('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if session().hasFlash('errors') %}
+    {% for types in session().getFlash('errors') %}
+        {% for message in types %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}

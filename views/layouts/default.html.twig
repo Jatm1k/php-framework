@@ -19,11 +19,7 @@
 {% include 'components/navbar.html.twig' %}
 
 <main class="container">
-{% if session().hasFlash('success') %}
-    {% for message in session().getFlash('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+{% include 'components/flash-messages.html.twig' %}
     {% block main %} {% endblock %}
 </main>
 

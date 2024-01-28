@@ -30,10 +30,14 @@ class Session implements SessionInterface
         return isset($_SESSION[$key]);
     }
 
-    public function setFlash(string $type, string $message): void
+    public function setFlash(string $type, string|array $message): void
     {
         $flash = $this->get(self::FLASH_KEY, []);
-        $flash[$type][] = $message;
+        if(is_array($message)) {
+            $flash[$type] = $message;
+        } else {
+            $flash[$type][] = $message;
+        }
         $this->set(self::FLASH_KEY, $flash);
     }
 
