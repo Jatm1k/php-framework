@@ -1,6 +1,10 @@
 <?php
 
+use App\Services\UserService;
 use Doctrine\DBAL\Connection;
+use Jatmy\Framework\Authenication\SessionAuthenication;
+use Jatmy\Framework\Authenication\SessionAuthInterface;
+use Jatmy\Framework\Authenication\UserServiceInterface;
 use Jatmy\Framework\Console\Application;
 use Jatmy\Framework\Console\Commands\MigrateCommand;
 use Jatmy\Framework\Console\Commands\MigrateRollbackCommand;
@@ -97,4 +101,8 @@ $container->add(RouterDispatch::class)
         RouterInterface::class,
         $container,
     ]);
+
+$container->add(SessionAuthInterface::class, SessionAuthenication::class)
+    ->addArgument(UserService::class)
+    ->addArgument(SessionInterface::class);
 return $container;

@@ -4,6 +4,12 @@
     {% endfor %}
 {% endif %}
 
+{% if session().hasFlash('error') %}
+    {% for message in session().getFlash('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
 {% if session().hasFlash('errors') %}
     {% for types in session().getFlash('errors') %}
         {% for message in types %}

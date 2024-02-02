@@ -3,8 +3,9 @@
 namespace App\Entities;
 
 use DateTimeImmutable;
+use Jatmy\Framework\Authenication\AuthUserInterface;
 
-class User
+class User implements AuthUserInterface
 {
 
     public function __construct(
@@ -26,7 +27,7 @@ class User
         return new static($id, $name, $email, $password, $createdAt ?? new DateTimeImmutable());
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

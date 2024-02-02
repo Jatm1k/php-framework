@@ -4,15 +4,40 @@ namespace App\Services;
 
 use App\Entities\User;
 use Doctrine\DBAL\Connection;
-use Jatmy\Framework\Http\Exceptions\NotFoundException;
+use Jatmy\Framework\Authenication\AuthUserInterface;
+use Jatmy\Framework\Authenication\UserServiceInterface;
 
-class UserService
+class UserService implements UserServiceInterface
 {
     public function __construct(
         private Connection $connection,
     ) {
         
     }
+
+    public function findByEmail(string $email): ?AuthUserInterface
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $result = $queryBuilder
+            ->select('*')
+            ->from('users')
+            ->where('email = :email')
+            ->setParameter('email', $email)
+            ->executeQuery();
+        
+        $user = $result->fetchAssociative();
+        if(!$user) {
+            return null;
+        }
+        return User::create(
+            id: $user['id'],
+            name: $user['name'],
+            email: $user['email'],
+            password: $user['password'],
+            createdAt: new \DateTimeImmutable($user['created_at']),
+        );
+    }
+
     public function save(User $user): User
     {
         $queryBuilder = $this->connection->createQueryBuilder();
