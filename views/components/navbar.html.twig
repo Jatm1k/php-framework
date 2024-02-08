@@ -20,8 +20,14 @@
                 <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
             </form>
+            {% if auth().check() %}
+             <form action="/logout" method="post">
+                <button class="btn btn-outline-danger ms-2">Выход</a>
+             </form>
+            {% else %}
              <a href="/register" class="btn btn-outline-success ms-2">Регистрация</a>
              <a href="/login" class="btn btn-outline-primary ms-2">Вход</a>
+            {% endif %}
         </div>
     </div>
 </nav>

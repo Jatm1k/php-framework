@@ -36,4 +36,11 @@ class LoginController extends AbstractController
         $this->request->getSession()->setFlash('success', 'User logged in successfully');
         return new RedirectResponse('/');
     }
+
+    public function destroy(): Response
+    {
+        $this->sessionAuth->logout();
+        $this->request->getSession()->setFlash('success', 'User logged out successfully');
+        return new RedirectResponse('/');
+    }
 }

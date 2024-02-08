@@ -7,6 +7,8 @@ use Jatmy\Framework\Session\SessionInterface;
 class Request
 {
     private SessionInterface $session;
+    private mixed $routeHandler;
+    private array $routeArgs;
     public function __construct(
         private readonly array $getParams,
         private readonly array $postData,
@@ -49,5 +51,25 @@ class Request
     public function getSession(): SessionInterface
     {
         return $this->session;
+    }
+
+    public function setRouteHandler(mixed $handler): void
+    {
+        $this->routeHandler = $handler;
+    }
+
+    public function getRouteHandler(): mixed
+    {
+        return $this->routeHandler;
+    }
+
+    public function setRouteArgs(array $args): void
+    {
+        $this->routeArgs = $args;
+    }
+
+    public function getRouteArgs(): array
+    {
+        return $this->routeArgs;
     }
 }

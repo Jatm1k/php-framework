@@ -8,7 +8,7 @@ use Jatmy\Framework\Http\Request;
 use Jatmy\Framework\Http\Response;
 use Jatmy\Framework\Session\SessionInterface;
 
-class Authenticate implements MiddlewareInterface
+class Guest implements MiddlewareInterface
 {
     public function __construct(
         private SessionAuthInterface $auth,
@@ -18,9 +18,9 @@ class Authenticate implements MiddlewareInterface
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         $this->session->start();
-        if(!$this->auth->check()) {
-            $this->session->setFlash('error', 'Please login first');
-            return new RedirectResponse('/login');
+        if($this->auth->check()) {
+            $this->session->setFlash('error', 'You are already logged in');
+            return new RedirectResponse('/');
         }
         return $handler->handle($request);
     }

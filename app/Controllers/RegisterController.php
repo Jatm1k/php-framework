@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Forms\User\RegisterForm;
 use App\Services\UserService;
+use Jatmy\Framework\Authenication\SessionAuthInterface;
 use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Http\RedirectResponse;
 use Jatmy\Framework\Http\Response;
@@ -12,6 +13,7 @@ class RegisterController extends AbstractController
 {
     public function __construct(
         private UserService $userService,
+        private SessionAuthInterface $auth,
     ) {
     }
     public function index(): Response
@@ -38,6 +40,8 @@ class RegisterController extends AbstractController
         $user = $form->save();
 
         $this->request->getSession()->setFlash('success', 'User created successfully');
+
+        $this->auth->login($user);
 
         return new RedirectResponse('/');
     }

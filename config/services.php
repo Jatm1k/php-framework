@@ -17,6 +17,7 @@ use Jatmy\Framework\Controller\AbstractController;
 use Jatmy\Framework\Dbal\ConnectionFactory;
 use Jatmy\Framework\Http\Kernel;
 use Jatmy\Framework\Console\Kernel as ConsoleKernel;
+use Jatmy\Framework\Http\Middleware\ExtractRouteInfo;
 use Jatmy\Framework\Http\Middleware\RequestHandler;
 use Jatmy\Framework\Http\Middleware\RouterDispatch;
 use Jatmy\Framework\Routing\Router;
@@ -48,9 +49,6 @@ $container->add('APP_ENV', new StringArgument($appEnv));
 
 $container->add(RouterInterface::class, Router::class);
 
-$container->extend(RouterInterface::class)
-    ->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
-
 $container->add(RequestHandlerInterface::class, RequestHandler::class)
     ->addArgument($container);
 
@@ -66,7 +64,8 @@ $container->addShared(SessionInterface::class, Session::class);
 $container->add('twig-factory', TwigFactory::class)
     ->addArguments([
         new StringArgument($viewsPath),
-        SessionInterface::class
+        SessionInterface::class,
+        SessionAuthInterface::class,
     ]);
 
 $container->addShared('twig', function () use ($container) {
@@ -105,4 +104,7 @@ $container->add(RouterDispatch::class)
 $container->add(SessionAuthInterface::class, SessionAuthenication::class)
     ->addArgument(UserService::class)
     ->addArgument(SessionInterface::class);
+
+$container->add(ExtractRouteInfo::class)
+    ->addArgument(new ArrayArgument($routes));
 return $container;

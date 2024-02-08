@@ -2,6 +2,7 @@
 
 namespace Jatmy\Framework\Template;
 
+use Jatmy\Framework\Authenication\SessionAuthInterface;
 use Jatmy\Framework\Session\SessionInterface;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -13,6 +14,7 @@ class TwigFactory
     public function __construct(
         private string $viewsPath,
         private SessionInterface $session,
+        private SessionAuthInterface $auth,
     ) {
     }
 
@@ -25,6 +27,7 @@ class TwigFactory
         ]);
         $twig->addExtension(new DebugExtension());
         $twig->addFunction(new TwigFunction('session', [$this, 'getSession']));
+        $twig->addFunction(new TwigFunction('auth', [$this, 'getAuth']));
 
         return $twig;
     }
@@ -32,5 +35,10 @@ class TwigFactory
     public function getSession(): SessionInterface
     {
         return $this->session;
+    }
+
+    public function getAuth(): SessionAuthInterface
+    {
+        return $this->auth;
     }
 }
