@@ -3,8 +3,9 @@
 namespace App\Entities;
 
 use DateTimeImmutable;
+use Jatmy\Framework\Dbal\Entity;
 
-class Post
+class Post extends Entity
 {
     public function __construct(
         private ?int $id,

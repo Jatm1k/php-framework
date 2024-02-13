@@ -2,30 +2,32 @@
 
 use App\Services\UserService;
 use Doctrine\DBAL\Connection;
+use League\Container\Container;
+use Jatmy\Framework\Http\Kernel;
+use Jatmy\Framework\Routing\Router;
+use Jatmy\Framework\Session\Session;
+use Symfony\Component\Dotenv\Dotenv;
+use Jatmy\Framework\Console\Application;
+use Jatmy\Framework\Template\TwigFactory;
+use League\Container\ReflectionContainer;
+use Jatmy\Framework\Event\EventDispatcher;
+use Jatmy\Framework\Dbal\ConnectionFactory;
+use Jatmy\Framework\Routing\RouterInterface;
+use Jatmy\Framework\Session\SessionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Jatmy\Framework\Controller\AbstractController;
+use Jatmy\Framework\Http\Middleware\RequestHandler;
+use Jatmy\Framework\Http\Middleware\RouterDispatch;
+use Jatmy\Framework\Console\Commands\MigrateCommand;
+use Jatmy\Framework\Console\Kernel as ConsoleKernel;
+use League\Container\Argument\Literal\ArrayArgument;
+use Jatmy\Framework\Http\Middleware\ExtractRouteInfo;
+use League\Container\Argument\Literal\StringArgument;
 use Jatmy\Framework\Authenication\SessionAuthenication;
 use Jatmy\Framework\Authenication\SessionAuthInterface;
 use Jatmy\Framework\Authenication\UserServiceInterface;
-use Jatmy\Framework\Console\Application;
-use Jatmy\Framework\Console\Commands\MigrateCommand;
 use Jatmy\Framework\Console\Commands\MigrateRollbackCommand;
 use Jatmy\Framework\Http\Middleware\RequestHandlerInterface;
-use League\Container\Argument\Literal\ArrayArgument;
-use League\Container\Argument\Literal\StringArgument;
-use League\Container\Container;
-use League\Container\ReflectionContainer;
-use Jatmy\Framework\Controller\AbstractController;
-use Jatmy\Framework\Dbal\ConnectionFactory;
-use Jatmy\Framework\Http\Kernel;
-use Jatmy\Framework\Console\Kernel as ConsoleKernel;
-use Jatmy\Framework\Http\Middleware\ExtractRouteInfo;
-use Jatmy\Framework\Http\Middleware\RequestHandler;
-use Jatmy\Framework\Http\Middleware\RouterDispatch;
-use Jatmy\Framework\Routing\Router;
-use Jatmy\Framework\Routing\RouterInterface;
-use Jatmy\Framework\Session\Session;
-use Jatmy\Framework\Session\SessionInterface;
-use Jatmy\Framework\Template\TwigFactory;
-use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
 $dotenv->load(BASE_PATH.'/.env');
@@ -52,11 +54,13 @@ $container->add(RouterInterface::class, Router::class);
 $container->add(RequestHandlerInterface::class, RequestHandler::class)
     ->addArgument($container);
 
+$container->addShared(EventDispatcherInterface::class, EventDispatcher::class);
+
 $container->add(Kernel::class)
     ->addArguments([
-        RouterInterface::class,
         $container,
         RequestHandlerInterface::class,
+        EventDispatcherInterface::class,
     ]);
 
 $container->addShared(SessionInterface::class, Session::class);

@@ -4,8 +4,9 @@ namespace App\Entities;
 
 use DateTimeImmutable;
 use Jatmy\Framework\Authenication\AuthUserInterface;
+use Jatmy\Framework\Dbal\Entity;
 
-class User implements AuthUserInterface
+class User extends Entity implements AuthUserInterface
 {
 
     public function __construct(

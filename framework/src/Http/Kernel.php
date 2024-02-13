@@ -3,20 +3,20 @@
 namespace Jatmy\Framework\Http;
 
 use Exception;
-use Doctrine\DBAL\Connection;
+use Jatmy\Framework\Http\Events\ResponseEvent;
 use League\Container\Container;
-use Jatmy\Framework\Routing\RouterInterface;
 use Jatmy\Framework\Http\Exceptions\HttpException;
 use Jatmy\Framework\Http\Middleware\RequestHandlerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class Kernel
 {
     private string $appEnv;
 
     public function __construct(
-        private RouterInterface $router,
         private Container $container,
         private RequestHandlerInterface $requestHandler,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
         $this->appEnv = $container->get('APP_ENV');
     }
@@ -27,6 +27,9 @@ class Kernel
         } catch (\Exception $e) {
             $response = $this->createExceptionResponse($e);
         }
+        
+        $this->eventDispatcher->dispatch(new ResponseEvent($request, $response));
+
         return $response;
     }
 

@@ -4,18 +4,19 @@ namespace App\Services;
 
 use App\Entities\Post;
 use Doctrine\DBAL\Connection;
+use Jatmy\Framework\Dbal\EntityService;
 use Jatmy\Framework\Http\Exceptions\NotFoundException;
 
 class PostService
 {
     public function __construct(
-        private Connection $connection,
+        private EntityService $service,
     ) {
         
     }
     public function save(Post $post): Post
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder = $this->service->getConnection()->createQueryBuilder();
         $queryBuilder
             ->insert('posts')
             ->values([
@@ -29,13 +30,13 @@ class PostService
                 'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s'),
             ])
             ->executeQuery();
-        $post->setId($this->connection->lastInsertId());
+        $post->setId($this->service->save($post));
         return $post;
     }
 
     public function find(int $id): ?Post
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder = $this->service->getConnection()->createQueryBuilder();
         $result = $queryBuilder
             ->select('*')
             ->from('posts')
