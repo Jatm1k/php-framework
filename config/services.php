@@ -25,23 +25,25 @@ use Jatmy\Framework\Http\Middleware\ExtractRouteInfo;
 use League\Container\Argument\Literal\StringArgument;
 use Jatmy\Framework\Authenication\SessionAuthenication;
 use Jatmy\Framework\Authenication\SessionAuthInterface;
-use Jatmy\Framework\Authenication\UserServiceInterface;
 use Jatmy\Framework\Console\Commands\MigrateRollbackCommand;
 use Jatmy\Framework\Http\Middleware\RequestHandlerInterface;
 
 $dotenv = new Dotenv();
-$dotenv->load(BASE_PATH.'/.env');
+$dotenv->load(dirname(__DIR__).'/.env');
 
 // Application parameters
 
-$routes = include BASE_PATH.'/routes/web.php';
+$basePath = dirname(__DIR__);
+$routes = include $basePath.'/routes/web.php';
 $appEnv = $_ENV['APP_ENV'] ?? 'local';
-$viewsPath = BASE_PATH.'/views';
+$viewsPath = $basePath.'/views';
 $databaseUrl = 'pdo-mysql://lemp:lemp@database:3306/lemp?charset=utf8mb4';
 
 // Application services
 
 $container = new Container();
+
+$container->add('base-path', new StringArgument($basePath));
 
 $container->delegate(new ReflectionContainer(true));
 
@@ -94,10 +96,10 @@ $container->add(ConsoleKernel::class)
 
 $container->add('console:migrate', MigrateCommand::class)
     ->addArgument(Connection::class)
-    ->addArgument(new StringArgument(BASE_PATH . '/database/migrations'));
+    ->addArgument(new StringArgument($basePath . '/database/migrations'));
 $container->add('console:migrate:rollback', MigrateRollbackCommand::class)
     ->addArgument(Connection::class)
-    ->addArgument(new StringArgument(BASE_PATH . '/database/migrations'));
+    ->addArgument(new StringArgument($basePath . '/database/migrations'));
 
 $container->add(RouterDispatch::class)
     ->addArguments([

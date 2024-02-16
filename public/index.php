@@ -18,11 +18,8 @@ $request = Request::createFromGlobals();
 /** @var Container $container */
 $container = require BASE_PATH . '/config/services.php';
 
-$eventDispatcher = $container->get(EventDispatcherInterface::class);
-$eventDispatcher
-->addListener(ResponseEvent::class, new InternalErrorListener())
-->addListener(ResponseEvent::class, new ContentLenghtListener())
-->addListener(EntityPersist::class, new HandleEntityListener());
+require_once BASE_PATH . '/bootstrap/bootstrap.php';
+
 
 $kernel = $container->get(Kernel::class);
 $response = $kernel->handle($request);

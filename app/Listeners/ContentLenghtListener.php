@@ -8,8 +8,8 @@ class ContentLenghtListener
     public function __invoke(ResponseEvent $event): void
     {
         $response = $event->getResponse();
-        if(is_null($response->getHeader('Content-Length'))) {
-            $response->setHeader('Content-Length', strlen($response->getContent()));
+        if(is_null($response->getHeader('X-Content-Length'))) {
+            $response->setHeader('X-Content-Length', strlen($response->getContent()));
         }
     }
 }
